@@ -3,7 +3,11 @@ const bcrypt=require('bcryptjs')
 const userSchema=new mongoose.Schema({
     username:{type:String,required:[true,"Username must be provided"]},
     email:{type:String,required:[true,"Email must be provided"],unique:[true,"User with that email already exist!"]},
-    password:{type:String,required:[true,"Password must be provided"]}
+    password:{type:String,required:[true,"Password must be provided"]},
+    tasks:{type:[{
+        name:String,
+        completed:Boolean
+    }]}
 })
 userSchema.pre('save',async function (next){
     const salt=bcrypt.genSaltSync(10)

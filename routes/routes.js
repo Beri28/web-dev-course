@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {register,login,logout}=require('../controller/controller')
+const {register,login,logout,getTasks,addNewTask,deleteTask}=require('../controller/controller')
 
 const isAuthenticated=(req,res,next)=>{
     const token=req.params.token
@@ -12,6 +12,10 @@ const isAuthenticated=(req,res,next)=>{
 router.post("/Register",register)
 router.post("/Login",login)
 router.get("/logout",logout)
+router.get("/task/getTasks/:id",getTasks)
+router.post("/task/add",addNewTask)
+// router.patch("/task/:id",updateTask)
+router.post("/task/delete/:id",deleteTask)
 
 
 module.exports=router

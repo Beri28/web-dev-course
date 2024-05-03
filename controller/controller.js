@@ -14,7 +14,7 @@ const register=async(req,res)=>{
         if(newUser){
             let token=createToken(newUser._id,newUser.username)
             res.cookie("authApp",token,{maxAge:1000*maxAge})
-            res.json({User:newUser.username,token:token})
+            res.json({User:newUser.username,ID:newUser._id,token:token})
             return
         }
         throw Error("Couldn't register user")
@@ -31,7 +31,7 @@ const login=async(req,res)=>{
         if(user){
             let token=createToken(user._id,user.username)
             res.cookie("authApp",token,{maxAge:1000*maxAge})
-            res.json({User:user.username,token:token})
+            res.json({User:user.username,ID:user._id,token:token,tasks:user.tasks})
             return
         }
         res.json({User:null})
@@ -48,7 +48,39 @@ const logout=(req,res)=>{
         res.json({Error:error.message})
     }
 }
+const getTasks=async(req,res)=>{
+    try{
+        let user=await userSchema.findOne({_id:req.params.id})
+        res.json({tasks:user.tasks})
+    }catch(error){
+        console.log(error.message)
+        res.json({Error:error.message})
+    }
+}
+const addNewTask=async (req,res)=>{
+    try{
+        let {userId,tasks}=req.body 
+        let user=await userSchema.findOneAndUpdate({_id:userId},{$set:{tasks:tasks}})
+        res.json({User:user.username,ID:user._id,tasks:user.tasks})
+
+    }catch(error){
+        console.log(error.message)
+        res.json({Error:error.message})
+    }
+}
+const deleteTask=async (req,res)=>{
+    try{
+       let user=await userSchema.findOneAndUpdate({_id:req.params.id},{$set:{tasks:req.body.tasks}})
+       res.json({User:user.username,ID:user._id,tasks:user.tasks})
+    }catch(error){
+        console.log(error.message)
+        res.json({Error:error.message}) 
+    }
+}
 
 exports.register=register
 exports.login=login
 exports.logout=logout
+exports.getTasks=getTasks
+exports.addNewTask=addNewTask
+exports.deleteTask=deleteTask
