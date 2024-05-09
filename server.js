@@ -5,8 +5,10 @@ const dotenv=require('dotenv').config()
 const mongoose=require('mongoose')
 const cookieParser=require('cookie-parser')
 const cors=require('cors')
+const passport=require('passport')
+const auth=require('./controller/google-auth')
 
-mongoose.connect(process.env.mongoURI_online).then(()=>{
+mongoose.connect(process.env.mongoURI).then(()=>{
     console.log("Connected to db succesfully")
 }).catch(()=>{
     console.log("Error connecting to db")
